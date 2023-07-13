@@ -53,7 +53,7 @@ jobs:
       - name: Terraform plan
         working-directory: /home/runner/work/vpc-peering/vpc-peering
         run: |
-
+          terraform init
           terraform plan -var-file="values.tfvars"
 
   terraform_cost:
