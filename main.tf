@@ -28,6 +28,4 @@ module "vpc_peering" {
   source      = "./src"
   peer_vpc_id = module.vpc_a.vpc_id
   vpc_id      = module.vpc_b.vpc_id
-
-
 }
