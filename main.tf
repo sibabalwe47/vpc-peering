@@ -25,6 +25,7 @@ module "vpc_b" {
 
 
 module "vpc_peering" {
+  depends_on  = [module.vpc_a, module.module.vpc_b]
   source      = "./src"
   peer_vpc_id = module.vpc_a.vpc_id
   vpc_id      = module.vpc_b.vpc_id
