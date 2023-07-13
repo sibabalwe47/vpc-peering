@@ -42,3 +42,68 @@ jobs:
 
       - name: Terraform plan
         run: terraform plan
+
+  terraform_cost:
+    runs-on: ubuntu-latest
+    needs: terraform_plan
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Infracost installation and authentication
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+          infracost --version
+          infracost configure set api_key ${{ secrets.INFRACOST_API_KEY }}
+          infracost breakdown --path .
+
+  terraform_test:
+    runs-on: ubuntu-latest
+    needs: [terraform_cost, terraform_plan]
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.9
+          terraform_wrapper: false
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Pending....
+        run: echo "Required knowledge of GoLand and Terratest."
+
+  terraform_apply:
+    runs-on: ubuntu-latest
+    needs: [terraform_test]
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.9
+          terraform_wrapper: false
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Terraform apply
+        run: terraform apply
+
+  terraform_destroy:
+    runs-on: ubuntu-latest
+    needs: terraform_apply
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.9
+          terraform_wrapper: false
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Terraform destroy
+        run: terraform destroy
