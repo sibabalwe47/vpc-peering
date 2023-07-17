@@ -13,5 +13,5 @@ data "aws_vpc" "owner" {
 data "aws_route_tables" "owner" {
   vpc_id = var.vpc_id
 }
-
+N
 
